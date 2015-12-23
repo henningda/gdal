@@ -97,7 +97,8 @@ static const FieldDesc UKOOAP190Fields[] =
     { "DEPTH", OFTReal },
     { "DAYOFYEAR", OFTInteger },
     { "TIME", OFTTime },
-    { "DATETIME", OFTDateTime }
+    { "DATETIME", OFTDateTime },
+    { "RECORD_TYPE", OFTString }
 };
 
 #define FIELD_LINENAME      0
@@ -113,6 +114,7 @@ static const FieldDesc UKOOAP190Fields[] =
 #define FIELD_DAYOFYEAR     10
 #define FIELD_TIME          11
 #define FIELD_DATETIME      12
+#define FIELD_RECORD_TYPE   13
 
 OGRUKOOAP190Layer::OGRUKOOAP190Layer( const char* pszFilename,
                                       VSILFILE* fpIn )
@@ -291,6 +293,11 @@ OGRFeature *OGRUKOOAP190Layer::GetNextRawFeature()
 
         OGRFeature* poFeature = new OGRFeature(poFeatureDefn);
         poFeature->SetFID(nNextFID ++);
+
+        char szRecordType[2];
+        szRecordType[0] = pszLine[0];
+        szRecordType[1] = '\0';
+        poFeature->SetField(FIELD_RECORD_TYPE, szRecordType);
 
         char szLineName[12 + 1];
         ExtractField(szLineName, pszLine, 2-1, 12);
